@@ -1,4 +1,4 @@
-const userServices = require('./user.services')
+const userServices = require('../services/user.services')
 
 exports.loginController = async (req, res) => {
   const { id, email } = req.user

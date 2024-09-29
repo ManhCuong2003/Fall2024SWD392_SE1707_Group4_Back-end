@@ -1,7 +1,7 @@
 const express = require('express')
-const { loginValidator } = require('./user.middlewares')
-const { loginController } = require('./user.controllers')
-const wrapAsync = require('../../utils/handler')
+const { loginValidator } = require('../middlewares/user.middlewares')
+const { loginController } = require('../controllers/user.controllers')
+const wrapAsync = require('../utils/handler')
 const userRoute = express.Router()
 
 /**
