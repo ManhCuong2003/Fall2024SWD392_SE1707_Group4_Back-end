@@ -19,3 +19,8 @@ exports.registerController = async (req, res) => {
     message: 'Registration successful.'
   })
 }
+
+exports.getCurrentUserController = async (req, res) => {
+  const result = await userServices.getUserInfor(req.decode_token.email)
+  return res.status(200).json(result)
+}

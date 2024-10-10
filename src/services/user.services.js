@@ -8,7 +8,7 @@ dotenv.config()
 class UserServices {
   async login(email, password) {
     const user = await userRepository.findUserByEmail(email)
-    // check user có tồn tại hay không
+    //check user có tồn tại hay không
     if (!user) {
       throw new CustomError(401, 'Email or password is incorrect')
     }
@@ -48,6 +48,11 @@ class UserServices {
       phone
     })
     return newUser
+  }
+
+  async getUserInfor(email) {
+    const userInfor = await userRepository.getUserInfor(email)
+    return userInfor
   }
 }
 
