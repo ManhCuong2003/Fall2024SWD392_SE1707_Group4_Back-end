@@ -10,8 +10,12 @@ class UserRepository {
   async createUser({ email, password, fullname, address, phone }) {
     const result =
       await sql.query`INSERT INTO Users OUTPUT INSERTED.email VALUES  (${email}, ${password}, ${fullname}, ${address}, ${phone}, 1, 1, '','', GETDATE(), GETDATE())`
-    console.log(result)
+    return result.recordset[0]
+  }
 
+  async getUserInfor(email) {
+    const result =
+      await sql.query`SELECT email, userfullname, address, phone, role_name FROM Users INNER JOIN Roles ON Users.role_id = Roles.role_id Where email = ${email}`
     return result.recordset[0]
   }
 }
