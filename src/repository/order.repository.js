@@ -9,6 +9,10 @@ class OrderRepository {
     const result = await sql.query`SELECT * FROM Orders WHERE Order_ID = ${id}`
     return result.recordset[0]
   }
+<<<<<<< HEAD
+}
+
+=======
   async createOrder({Customer_ID, Order_Date, Total_Order_Price, Order_Status, Payment_Method}) {
     const result =
       await sql.query`INSERT INTO Orders (Customer_ID, Order_Date, Total_Order_Price, Order_Status, Payment_Method) VALUES (${Customer_ID}, ${Order_Date}, ${Total_Order_Price}, ${Order_Status}, ${Payment_Method})`
@@ -36,4 +40,5 @@ class OrderDetailRepository {
 }
 
 module.exports = new OrderDetailRepository()
+>>>>>>> 84558293ea243bbd5286534675edcb0f529b4782
 module.exports = new OrderRepository()
