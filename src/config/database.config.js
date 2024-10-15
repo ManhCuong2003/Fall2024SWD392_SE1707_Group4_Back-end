@@ -5,7 +5,7 @@ dotenv.config()
 const config = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  server: 'localhost',
+  server: 'localhost\\MSSQLSERVER01',
   port: 1433,
   database: process.env.DB_NAME
 }
