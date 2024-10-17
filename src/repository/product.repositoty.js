@@ -9,6 +9,9 @@ class ProductRepository {
     const result = await sql.query`SELECT * FROM Kois WHERE koi_id = ${id}`
     return result.recordset[0]
   }
+  async createProduct() {
+    
+  }
 }
 
 module.exports = new ProductRepository()
