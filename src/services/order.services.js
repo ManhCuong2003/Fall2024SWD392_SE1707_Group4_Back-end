@@ -2,7 +2,9 @@ const orderRepository = require('../repository/order.repository')
 const OrderRepository = require('../repository/order.repository')
 const CustomError = require('../utils/customError')
 
+
 class OrderService {
+
   async getAllOrder() {
     const orderList = await OrderRepository.getAllOrder()
     return orderList
@@ -44,6 +46,7 @@ class OrderService {
     }
     return createOrderDetail
   }
+
 }
 
 module.exports = new OrderService()
