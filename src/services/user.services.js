@@ -54,6 +54,17 @@ class UserServices {
     const userInfor = await userRepository.getUserInfor(email)
     return userInfor
   }
+
+  async UpdateUser(user) {
+    const existedUser = await userRepository.findUserByEmail(user.email)
+    if(!existedUser) {
+      throw new CustomError(401, 'user not found') 
+    }
+    const updatedUser = await userRepository.updateUser(user)
+    
+    return updatedUser
+  }
+
 }
 
 const userServices = new UserServices()
