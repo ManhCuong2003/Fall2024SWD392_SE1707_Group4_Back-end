@@ -1,3 +1,4 @@
+const orderRepository = require('../repository/order.repository')
 const OrderRepository = require('../repository/order.repository')
 const CustomError = require('../utils/customError')
 
@@ -21,6 +22,27 @@ class OrderService {
       throw new CustomError(400, "Create Order failed")
     }
     return createOrder
+  }
+
+  async getAllOrderDetails(orderId) {
+    const orderDetailList = orderRepository.getAllOrderDetails(orderId);
+    return orderDetailList;
+  }
+
+  async getOrderDetail(orderId, koiId) {
+    const orderDetail = await orderRepository.getOrderDetail(orderId, koiId);
+    if (!orderDetail) {
+      throw new CustomError(404, 'Order detail not found')
+    }
+    return orderDetail
+  }
+
+  async createOrderDetail({orderId, koiId, quantity, totalPrice}) {
+    const createOrderDetail = await orderRepository.createOrderDetail(orderId, koiId, quantity, totalPrice);
+    if(!createOrderDetail) {
+      throw new CustomError(400, "Create Order detail failed")
+    }
+    return createOrderDetail
   }
 }
 

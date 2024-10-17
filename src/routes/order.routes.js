@@ -4,12 +4,22 @@ const wrapAsync = require('../utils/handler')
 const {
   getAllOrder,
   getOrderById,
-  createOrder
+  createOrder,
+  getAllOrderDetails,
+  getOrderDetail,
+  createOrderDetail
 } = require('../controllers/order.controllers')
 const orderRoute = express.Router()
 
 orderRoute.get('/', wrapAsync(getAllOrder))
+
 orderRoute.get('/:orderId', wrapAsync(getOrderById))
-orderRoute.get('/checkout-page', wrapAsync(createOrder))
+
+orderRoute.get('/', wrapAsync(createOrder))
+
+orderRoute.get('/:orderId/', wrapAsync(getAllOrderDetails))
+
+orderRoute.get('/:orderId/:koiId', wrapAsync(getOrderDetail))
+
 
 module.exports = orderRoute
