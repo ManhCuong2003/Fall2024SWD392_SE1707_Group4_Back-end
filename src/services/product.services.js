@@ -1,19 +1,19 @@
-const productRepositoty = require('../repository/product.repositoty')
-const CustomError = require('../utils/customError')
+const productRepositoty = require('../repository/product.repositoty');
+const CustomError = require('../utils/customError');
 
 class ProductService {
   async getAllProduct() {
-    const productList = await productRepositoty.getAllProduct()
-    return productList
+    const productList = await productRepositoty.getAllProduct();
+    return productList;
   }
 
   async getProductById(id) {
-    const product = await productRepositoty.getProducById(id)
+    const product = await productRepositoty.getProducById(id);
     if (!product) {
-      throw new CustomError(404, 'Koi fish not found')
+      throw new CustomError(404, 'Koi fish not found');
     }
-    return product
+    return product;
   }
 }
 
-module.exports = new ProductService()
+module.exports = new ProductService();

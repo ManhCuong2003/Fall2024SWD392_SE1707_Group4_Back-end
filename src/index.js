@@ -75,7 +75,7 @@ app.get(
 app.get(
   '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
+  (req, res) => { 
     console.log('User authenticated:', req.user);
     res.redirect('/api/current_user');
   }
