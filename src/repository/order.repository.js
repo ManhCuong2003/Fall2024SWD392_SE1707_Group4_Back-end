@@ -9,18 +9,13 @@ class OrderRepository {
     const result = await sql.query`SELECT * FROM Orders WHERE Order_ID = ${id}`
     return result.recordset[0]
   }
-<<<<<<< HEAD
-}
-
-=======
   async createOrder({Customer_ID, Order_Date, Total_Order_Price, Order_Status, Payment_Method}) {
     const result =
       await sql.query`INSERT INTO Orders (Customer_ID, Order_Date, Total_Order_Price, Order_Status, Payment_Method) VALUES (${Customer_ID}, ${Order_Date}, ${Total_Order_Price}, ${Order_Status}, ${Payment_Method})`
     return result.recordset[0]
   }
-  // async updateOrder()
-}
-class OrderDetailRepository {
+
+  // order Detail
   async getAllOrderDetails(orderId) {
     const result = await sql.query`SELECT * FROM Order_Detail WHERE Order_ID = ${orderId}`
     return result.recordset
@@ -36,9 +31,6 @@ class OrderDetailRepository {
 
     return result.recordset[0]
   }
-  // async updateOrder()
 }
 
-module.exports = new OrderDetailRepository()
->>>>>>> 84558293ea243bbd5286534675edcb0f529b4782
 module.exports = new OrderRepository()
