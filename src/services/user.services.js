@@ -40,7 +40,7 @@ class UserServices {
     }
     const salt = parseInt(process.env.SALT, 10)
     const hashedPassword = await bcrypt.hash(password, salt)
-    const newUser = await userRepository.createUser({
+    const newUser = await userRepository.createCustomer({
       email,
       password: hashedPassword,
       fullname,
