@@ -3,6 +3,7 @@ const axios = require('axios').default // npm install axios
 const CryptoJS = require('crypto-js') // npm install crypto-js
 const moment = require('moment') // npm install moment
 const dotenv = require('dotenv')
+const orderServices = require('../services/order.services')
 const paymentRoute = express.Router()
 
 dotenv.config()
@@ -15,21 +16,29 @@ const config = {
 }
 
 paymentRoute.post('/make-payment', async (req, res) => {
-  const embed_data = {}
+  const embed_data = {
+    redirecturl: 'http://192.168.150.1:5173/customer-dashboard'
+  }
+  const { cartItems, total, user } = req.body
 
-  const items = [{}]
+  const items = cartItems.map((item) => ({
+    id: item.koi_id,
+    name: item.koi_name,
+    quantity: item.quantity,
+    price: item.koi_price
+  }))
   const transID = Math.floor(Math.random() * 1000000)
   const order = {
     app_id: config.app_id,
     app_trans_id: `${moment().format('YYMMDD')}_${transID}`, // translation missing: vi.docs.shared.sample_code.comments.app_trans_id
-    app_user: 'user123',
+    app_user: user.user_ID,
     app_time: Date.now(), // miliseconds
     item: JSON.stringify(items),
     embed_data: JSON.stringify(embed_data),
-    amount: 50000,
+    amount: total,
     callback_url:
-      'https://f96a-118-69-70-166.ngrok-free.app/api/payment/callback',
-    description: `Payment for the order #${transID}`,
+      'https://bbbe-2405-4802-8011-1230-780b-6f5e-adce-bea4.ngrok-free.app/api/payment/callback',
+    description: `Payment for the order`,
     bank_code: ''
   }
 
@@ -58,13 +67,12 @@ paymentRoute.post('/make-payment', async (req, res) => {
   }
 })
 
-paymentRoute.post('/callback', (req, res) => {
+paymentRoute.post('/callback', async (req, res) => {
   let result = {}
 
   try {
     let dataStr = req.body.data
     let reqMac = req.body.mac
-
     let mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString()
     console.log('mac =', mac)
 
@@ -77,11 +85,17 @@ paymentRoute.post('/callback', (req, res) => {
       // thanh toán thành công
       // merchant cập nhật trạng thái cho đơn hàng
       let dataJson = JSON.parse(dataStr, config.key2)
-      console.log(
-        "update order's status = success where app_trans_id =",
-        dataJson['app_trans_id']
+      const products = JSON.parse(dataJson.item)
+      const user_id = parseInt(dataJson.app_user)
+      const order_id = await orderServices.createOrder(
+        user_id,
+        new Date(),
+        dataJson.amount,
+        4,
+        'ZaloPay'
       )
-
+      console.log('order_id: ', order_id)
+      await orderServices.addOrderDetail(order_id, products)
       result.return_code = 1
       result.return_message = 'success'
     }
@@ -92,52 +106,6 @@ paymentRoute.post('/callback', (req, res) => {
 
   // thông báo kết quả cho ZaloPay server
   res.json(result)
-})
-
-paymentRoute.post('/check-status-order/:app_trans_id', async (req, res) => {
-  const { app_trans_id } = req.params
-
-  const postData = {
-    app_id: config.app_id,
-    app_trans_id,
-    mac: ''
-  }
-
-  const data = postData.app_id + '|' + postData.app_trans_id + '|' + config.key1 // appid|app_trans_id|key1
-  postData.mac = CryptoJS.HmacSHA256(data, config.key1).toString()
-
-  const postConfig = {
-    method: 'post',
-    url: 'https://sb-openapi.zalopay.vn/v2/query',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    data: qs.stringify(postData)
-  }
-
-  try {
-    const result = await axios(postConfig)
-    return res
-      .status(StatusCodes.OK)
-      .json(omit(result.data, 'sub_return_code', 'sub_return_message'))
-    /**
-     ** Kết quả mẫu:
-      {
-        "return_code": 1, // 1 : Thành công, 2 : Thất bại, 3 : Đơn hàng chưa thanh toán hoặc giao dịch đang xử lý
-        "return_message": "",
-        "sub_return_code": 1,
-        "sub_return_message": "",
-        "is_processing": false,
-        "amount": 50000,
-        "zp_trans_id": 240331000000175,
-        "server_time": 1711857138483,
-        "discount_amount": 0
-      }
-    */
-  } catch (error) {
-    console.log('🚀 ~ error:', error)
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Internal Server Error' })
-  }
 })
 
 module.exports = paymentRoute

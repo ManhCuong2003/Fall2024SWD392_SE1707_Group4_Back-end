@@ -15,7 +15,7 @@ class UserRepository {
 
   async getUserInfor(email) {
     const result =
-      await sql.query`SELECT email, userfullname, address, phone, role_name FROM Users INNER JOIN Roles ON Users.role_id = Roles.role_id Where email = ${email}`
+      await sql.query`SELECT user_ID, email, userfullname, address, phone, role_name FROM Users INNER JOIN Roles ON Users.role_id = Roles.role_id Where email = ${email}`
     return result.recordset[0]
   }
 }
