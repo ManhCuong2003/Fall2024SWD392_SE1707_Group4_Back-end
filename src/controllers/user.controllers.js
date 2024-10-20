@@ -24,3 +24,11 @@ exports.getCurrentUserController = async (req, res) => {
   const result = await userServices.getUserInfor(req.decode_token.email)
   return res.status(200).json(result)
 }
+
+exports.UpdateUserController = async (req, res) => {
+  const { user } = req.body
+  await userServices.UpdateUser(user)
+  return res.status(201).json({
+    message: 'Update successful.'
+  })
+}

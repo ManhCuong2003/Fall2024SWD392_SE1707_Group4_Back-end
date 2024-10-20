@@ -40,7 +40,7 @@ class UserServices {
     }
     const salt = parseInt(process.env.SALT, 10)
     const hashedPassword = await bcrypt.hash(password, salt)
-    const newUser = await userRepository.createUser({
+    const newUser = await userRepository.createCustomer({
       email,
       password: hashedPassword,
       fullname,
@@ -54,6 +54,17 @@ class UserServices {
     const userInfor = await userRepository.getUserInfor(email)
     return userInfor
   }
+
+  async UpdateUser(user) {
+    const existedUser = await userRepository.findUserByEmail(user.email)
+    if(!existedUser) {
+      throw new CustomError(401, 'user not found') 
+    }
+    const updatedUser = await userRepository.updateUser(user)
+    
+    return updatedUser
+  }
+
 }
 
 const userServices = new UserServices()
