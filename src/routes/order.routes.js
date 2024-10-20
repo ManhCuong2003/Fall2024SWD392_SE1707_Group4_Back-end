@@ -7,7 +7,7 @@ const {
   createOrder,
   getAllOrderDetails,
   getOrderDetail,
-  createOrderDetail
+  createOrderDetail,
   createOrder
 } = require('../controllers/order.controllers')
 const orderRoute = express.Router()
