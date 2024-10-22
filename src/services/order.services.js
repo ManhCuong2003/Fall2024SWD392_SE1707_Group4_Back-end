@@ -43,6 +43,10 @@ class OrderService {
   async addOrderDetail(order_id, products) {
     await orderRepository.addOrderDetail(order_id, products)
   }
+
+  async getAllOrderByUserId(userId) {
+    return await orderRepository.getAllOrderByUserId(userId)
+  }
 }
 
 module.exports = new OrderService()

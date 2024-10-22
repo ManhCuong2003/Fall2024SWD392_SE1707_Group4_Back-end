@@ -1,3 +1,4 @@
+const orderServices = require('../services/order.services')
 const userServices = require('../services/user.services')
 
 exports.loginController = async (req, res) => {
@@ -31,4 +32,9 @@ exports.UpdateUserController = async (req, res) => {
   return res.status(201).json({
     message: 'Update successful.'
   })
+}
+
+exports.getAllOrderByUserController = async (req, res) => {
+  const result = await orderServices.getAllOrderByUserId(req.params.userId)
+  return res.status(200).json(result)
 }
