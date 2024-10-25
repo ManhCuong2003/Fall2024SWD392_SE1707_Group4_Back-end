@@ -21,6 +21,6 @@ orderRoute.get('/:orderId/', wrapAsync(getAllOrderDetails))
 
 orderRoute.get('/:orderId/:koiId', wrapAsync(getOrderDetail))
 
-orderRoute.get('/checkout-page', wrapAsync(createOrder))
+orderRoute.get('/checkout-page', wrapAsync(createOrderDetail))
 
 module.exports = orderRoute
