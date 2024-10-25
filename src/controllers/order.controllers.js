@@ -1,4 +1,3 @@
-const orderServices = require('../services/product.services')
 const orderServices = require('../services/order.services')
 
 exports.getAllOrder = async (req, res) => {
@@ -13,7 +12,27 @@ exports.getOrderById = async (req, res) => {
 }
 
 exports.createOrder = async (req, res) => {
-  const { Customer_ID, Order_Date, Total_Order_Price, Order_Status, Payment_Method } = req.params
-  const response = await orderServices.createOrder(Customer_ID, Order_Date, Total_Order_Price, Order_Status, Payment_Method)
+  const {
+    Customer_ID,
+    Order_Date,
+    Total_Order_Price,
+    Order_Status,
+    Payment_Method
+  } = req.params
+  const response = await orderServices.createOrder(
+    Customer_ID,
+    Order_Date,
+    Total_Order_Price,
+    Order_Status,
+    Payment_Method
+  )
   return res.status(200).json(response)
+}
+
+exports.updateOrderStatusController = async (req, res) => {
+  await orderServices.updateOrderStatus(
+    req.params.orderId,
+    req.body.newStatusId
+  )
+  return res.status(200).json({ message: 'update success' })
 }
