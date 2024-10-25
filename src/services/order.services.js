@@ -1,9 +1,7 @@
 const orderRepository = require('../repository/order.repository')
 const CustomError = require('../utils/customError')
 
-
 class OrderService {
-
   async getAllOrder() {
     const orderList = await orderRepository.getAllOrder()
     return orderList
@@ -16,36 +14,38 @@ class OrderService {
     }
     return order
   }
+  async createOrder(
+    Customer_ID,
+    Order_Date,
+    Total_Order_Price,
+    Order_Status,
+    Payment_Method
+  ) {
+    try {
+      const createOrder = await orderRepository.createOrder({
+        Customer_ID,
+        Order_Date,
+        Total_Order_Price,
+        Order_Status,
+        Payment_Method
+      })
 
-  async createOrder(Customer_ID, Order_Date, Total_Order_Price, Order_Status, Payment_Method) {
-    const createOrder = await orderRepository.createOrder(Customer_ID, Order_Date, Total_Order_Price, Order_Status, Payment_Method)
-    if(!createOrder) {
-      throw new CustomError(400, "Create Order failed")
+      if (!createOrder) {
+        throw new CustomError(400, 'Create Order failed')
+      }
+      return createOrder
+    } catch (error) {
+      console.log(error)
     }
-    return createOrder
   }
 
-  async getAllOrderDetails(orderId) {
-    const orderDetailList = orderRepository.getAllOrderDetails(orderId);
-    return orderDetailList;
+  async addOrderDetail(order_id, products) {
+    await orderRepository.addOrderDetail(order_id, products)
   }
 
-  async getOrderDetail(orderId, koiId) {
-    const orderDetail = await orderRepository.getOrderDetail(orderId, koiId);
-    if (!orderDetail) {
-      throw new CustomError(404, 'Order detail not found')
-    }
-    return orderDetail
+  async getAllOrderByUserId(userId) {
+    return await orderRepository.getAllOrderByUserId(userId)
   }
-
-  async createOrderDetail({orderId, koiId, quantity, totalPrice}) {
-    const createOrderDetail = await orderRepository.createOrderDetail(orderId, koiId, quantity, totalPrice);
-    if(!createOrderDetail) {
-      throw new CustomError(400, "Create Order detail failed")
-    }
-    return createOrderDetail
-  }
-
 }
 
 module.exports = new OrderService()
