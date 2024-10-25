@@ -7,7 +7,8 @@ const {
   createOrder,
   getAllOrderDetails,
   getOrderDetail,
-  createOrderDetail
+  createOrderDetail,
+  updateOrderStatusController
 } = require('../controllers/order.controllers')
 const orderRoute = express.Router()
 
@@ -22,5 +23,7 @@ orderRoute.get('/:orderId/', wrapAsync(getAllOrderDetails))
 orderRoute.get('/:orderId/:koiId', wrapAsync(getOrderDetail))
 
 orderRoute.get('/checkout-page', wrapAsync(createOrder))
+
+orderRoute.put('/:orderId/status', wrapAsync(updateOrderStatusController))
 
 module.exports = orderRoute

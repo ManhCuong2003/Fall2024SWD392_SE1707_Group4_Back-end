@@ -2,8 +2,46 @@ const { sql } = require('../config/database.config')
 
 class OrderRepository {
   async getAllOrder() {
-    const result = await sql.query`SELECT * FROM Orders`
-    return result.recordset
+    const result = await sql.query`
+    SELECT 
+    Orders.Order_ID, 
+    Order_Status.Order_Status_Name, 
+    Kois.koi_id, 
+    Kois.koi_name, 
+    Order_Detail.Quantity, 
+    Kois.koi_price,
+	Users.userfullname
+FROM Orders
+INNER JOIN Order_Status ON Orders.Order_Status = Order_Status.Order_Status_ID
+INNER JOIN Order_Detail ON Orders.Order_ID = Order_Detail.Order_ID
+INNER JOIN Kois ON Order_Detail.Koi_ID = Kois.koi_id
+INNER JOIN Users ON Orders.Customer_ID = Users.user_ID
+    `
+    if (result.recordset.length === 0) {
+      return []
+    }
+    let orders = {}
+    result.recordset.forEach((row) => {
+      if (!orders[row.Order_ID]) {
+        orders[row.Order_ID] = {
+          id: row.Order_ID,
+          status: row.Order_Status_Name,
+          customerName: row.userfullname,
+          items: []
+        }
+      }
+      orders[row.Order_ID].items.push({
+        koi_id: row.koi_id,
+        koi_name: row.koi_name,
+        quantity: row.Quantity,
+        price: row.koi_price
+      })
+    })
+
+    // Chuyển đối tượng thành mảng
+    let formattedOrders = Object.values(orders)
+    console.log(formattedOrders)
+    return formattedOrders
   }
   async getOrderById(id) {
     const result = await sql.query`SELECT * FROM Orders WHERE Order_ID = ${id}`
@@ -79,6 +117,10 @@ class OrderRepository {
     let formattedOrders = Object.values(orders)
     console.log(formattedOrders)
     return formattedOrders
+  }
+
+  async updateOrderStatus(order_id, newStatus) {
+    await sql.query`UPDATE Orders SET Order_Status = ${newStatus} WHERE Order_ID = ${order_id}`
   }
 }
 // class OrderDetailRepository {
