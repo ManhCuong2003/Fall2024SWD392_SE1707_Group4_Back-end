@@ -28,3 +28,11 @@ exports.createOrder = async (req, res) => {
   )
   return res.status(200).json(response)
 }
+
+exports.updateOrderStatusController = async (req, res) => {
+  await orderServices.updateOrderStatus(
+    req.params.orderId,
+    req.body.newStatusId
+  )
+  return res.status(200).json({ message: 'update success' })
+}
