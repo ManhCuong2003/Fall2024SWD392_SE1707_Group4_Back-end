@@ -95,4 +95,5 @@ class OrderRepository {
 //     const result =
 //       await sql.query`INSERT INTO Order_Detail (Order_ID, Koi_ID, Quantity, Total_Price)
 //         VALUES(${orderId}, ${koiId}, ${quantity}, ${totalPrice})`
+
 module.exports = new OrderRepository()
